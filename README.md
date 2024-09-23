@@ -1,4 +1,4 @@
-ndian Cuisine Explorer
+Indian Cuisine Explorer
 This project is a web application designed to assist users in exploring Indian cuisine. The application provides details about various Indian dishes, including their ingredients, cooking time, origin, and more. Users can search for dishes, explore their details, and find recipes based on available ingredients.
 
 Table of Contents
