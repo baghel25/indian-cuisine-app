@@ -1,45 +1,45 @@
-// frontend/src/components/DishSuggester.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
 
 const DishSuggester = () => {
-  const [ingredients, setIngredients] = useState('');
-  const [suggestedDishes, setSuggestedDishes] = useState([]);
+    const [ingredients, setIngredients] = useState('');
+    const [suggestions, setSuggestions] = useState([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const ingredientList = ingredients.split(',').map(i => i.trim());
-    const { data } = await axios.post('/api/dishes/suggest', { ingredients: ingredientList });
-    setSuggestedDishes(data);
+    const handleSuggest = async () => {
+      try {
+          console.log('Fetching suggestions for ingredients:', ingredients);
+          const response = await fetch(`${process.env.REACT_APP_API_URL}/api/suggested-dishes?ingredients=${ingredients}`);
+          
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+  
+          const data = await response.json();
+          setSuggestions(data);
+      } catch (error) {
+          console.error('Error fetching suggested dishes:', error);
+          alert('Failed to fetch suggested dishes. Please try again.');
+      }
   };
+  
+  
 
-  return (
-    <div>
-      <h2>Dish Suggester</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Enter ingredients (comma-separated):
-          <input
-            type="text"
-            value={ingredients}
-            onChange={(e) => setIngredients(e.target.value)}
-          />
-        </label>
-        <button type="submit">Suggest Dishes</button>
-      </form>
-
-      <h3>Suggested Dishes:</h3>
-      <ul>
-        {suggestedDishes.length > 0 ? (
-          suggestedDishes.map((dish, index) => (
-            <li key={index}>{dish.name}</li>
-          ))
-        ) : (
-          <p>No dishes found. Please try different ingredients.</p>
-        )}
-      </ul>
-    </div>
-  );
+    return (
+        <div>
+            <h2>Dish Suggester</h2>
+            <input
+                type="text"
+                placeholder="Enter ingredients (comma separated)"
+                value={ingredients}
+                onChange={(e) => setIngredients(e.target.value)}
+            />
+            <button onClick={handleSuggest}>Suggest Dishes</button>
+            <ul>
+                {suggestions.map(dish => (
+                    <li key={dish.name}>{dish.name}</li>
+                ))}
+            </ul>
+        </div>
+    );
 };
 
 export default DishSuggester;
